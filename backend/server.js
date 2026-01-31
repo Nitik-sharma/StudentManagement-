@@ -2,6 +2,8 @@ import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import connectDB from './src/config/db.js'
+import authRoutes from './src/routes/authRoutes.js'
+import projectRoutes from './src/modules/projectRoutes.js'
 dotenv.config()
 
 
@@ -16,7 +18,8 @@ app.use(express.json());
 // Connect mongoDb
 connectDB()
 
-
+app.use("/api/auth", authRoutes)
+app.use("/api/projects",projectRoutes)
 app.get("/", (req, res) => {
     res.send("Project is running ")
 })

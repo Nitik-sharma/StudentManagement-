@@ -99,3 +99,9 @@ export const getAssignTeacher = async (req, res) => {
     }
     
 }
+
+
+
+export const updateAssignment = (req,res) => {
+    console.log("Hello")
+}

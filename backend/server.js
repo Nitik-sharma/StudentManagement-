@@ -4,6 +4,7 @@ import cors from 'cors'
 import connectDB from './src/config/db.js'
 import authRoutes from './src/routes/authRoutes.js'
 import projectRoutes from './src/modules/projectRoutes.js'
+import fileRoutes from './src/routes/fileRoutes.js'
 dotenv.config()
 
 
@@ -19,7 +20,8 @@ app.use(express.json());
 connectDB()
 
 app.use("/api/auth", authRoutes)
-app.use("/api/projects",projectRoutes)
+app.use("/api/projects", projectRoutes)
+app.use("/api/file",fileRoutes)
 app.get("/", (req, res) => {
     res.send("Project is running ")
 })

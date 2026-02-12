@@ -1,6 +1,6 @@
 import express from 'express'
 import { authorizeRoles, protect } from '../middleware/middleware.js'
-import { createProject, updateProjectStatus,getProject, getAssignTeacher } from './projectController.js'
+import { createProject, updateProjectStatus,getProject, getAssignTeacher, updateAssignmentProgress } from './projectController.js'
 
 
 
@@ -16,7 +16,8 @@ router.put("/:id/status",
     authorizeRoles("admin"),
     updateProjectStatus
 )
-router.put("/:id/assign-teacher",protect,authorizeRoles("admin"),getAssignTeacher)
+router.put("/:id/assign-teacher", protect, authorizeRoles("admin"), getAssignTeacher)
+router.put("/:id/progress",protect,authorizeRoles("teacher"),updateAssignmentProgress)
 router.get("/", protect, getProject)
 
 

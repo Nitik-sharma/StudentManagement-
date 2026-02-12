@@ -1,3 +1,4 @@
+import { json } from "express";
 import Project from "../models/Project.js";
 
 // Student Submit Project
@@ -101,7 +102,46 @@ export const getAssignTeacher = async (req, res) => {
 }
 
 
+// Teacher update projeect progress 
+export const updateAssignmentProgress = async(req,res) => {
+   try {
+       const { progress, remarks, projectStatus } = req.body
+       const projects = await Project.findById(req.params.id);
 
-export const updateAssignment = (req,res) => {
-    console.log("Hello")
+       if (!projects) {
+           return res.status(404).json({message:"Project not found "})
+       }
+
+       //    only assignment teacher can update
+       
+       if (!projects.teacher || projects.teacher.toString() !== req.user._id.toString()) {
+           return res.status(403).json({message:"Not authorized to update this project "})
+       }
+
+       if (progress !== undefined) {
+           projects.progress=progress
+       }
+
+       if (remarks !== undefined) {
+           projects.remarks=remarks
+       }
+
+       if (projectStatus !== undefined) {
+           projects.projectStatus=projectStatus
+       }
+
+       await projects.save()
+
+       res.json({
+           message: "Project updated suceessfully",
+           json
+       })
+
+
+
+
+
+   } catch (error) {
+    res.status(500).json({message:error.message})
+   }
 }

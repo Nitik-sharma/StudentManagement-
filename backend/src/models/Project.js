@@ -24,6 +24,21 @@ const projectSchema = new mongoose.Schema({
         type: String,
         enum: ["pending", "approved", "rejected"],
         default:"pending"
+    },
+    progress: {
+        type: Number,
+        default: 0,
+        min: 0,
+        max:100
+    },
+    remarks: {
+        type: String,
+        default:""
+    },
+    projectStatus: {
+        type: String,
+        enum: ["not-started", "in-progress", "completed"],
+        default:"not-started"
     }
 }, {
     timestamps:true

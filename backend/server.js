@@ -7,6 +7,8 @@ import projectRoutes from './src/modules/projectRoutes.js'
 import fileRoutes from './src/routes/fileRoutes.js'
 import attandanceRoute from './src/routes/attandanceRoute.js'
 import assignmentRoutes from './src/routes/assignmentRoutes.js'
+import addMock from './src/routes/mockTestRoutes.js'
+import Dashboard from './src/routes/performanceRoutes.js'
 
 dotenv.config()
 
@@ -26,7 +28,10 @@ app.use("/api/auth", authRoutes)
 app.use("/api/projects", projectRoutes)
 app.use("/api/file", fileRoutes)
 app.use("/api/attandance", attandanceRoute)
-app.use("/api/addAssignment",assignmentRoutes)
+app.use("/api/addAssignment", assignmentRoutes)
+app.use("/api/addMockTest", addMock)
+app.use("/api/performance",Dashboard)
+
 app.get("/", (req, res) => {
     res.send("Project is running ")
 })

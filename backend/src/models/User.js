@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default:0
     },
-    communicationrating: {
+    communicationRating: {
         type: Number,
         default:0
     },

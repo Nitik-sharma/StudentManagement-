@@ -8,7 +8,7 @@ export const addAssignment = async (req, res) => {
         const percentage = (Number(marksObtain) / Number(maxMarks)) * 100
         
         const assignment = await Assignment.create({
-            studentId: studentId,
+            student: studentId,
             course,
             title,
             marksObtain,

@@ -5,10 +5,16 @@ import Attendance from "../models/Attendance.js";
 export const markAttandance = async (req, res) => {
     try {
         const { studentId, course, totalClass, attendedClasses } = req.body
+
+        if (!studentId || !course || !totalClass || !attendedClasses) {
+            return res.status(400).json({
+                message: "All fields are required"
+            })
+        }
         const percentage = (attendedClasses / totalClass) * 100
         
         const attandanceMark = await Attendance.create({
-            studentId: studentId,
+           student:studentId,
             course,
             totalClass,
             attendedClasses,

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 const AssignmentSchema = new mongoose.Schema({
-    studentId: {
+    student: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required:true

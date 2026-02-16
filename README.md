@@ -268,5 +268,12 @@ Show less
 
 
 
+we make attandance schema which tell 
+student → which student
+course → which subject
+totalClasses → total lectures
+attendedClasses → attended lectures
+attendancePercentage → calculated value
+markedBy → teacher who marked attendance
 
 

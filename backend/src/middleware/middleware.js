@@ -12,6 +12,9 @@ export const protect = async (req, res, next) => {
       token = req.headers.authorization.split(" ")[1];
     }
 
+    console.log("Authorization header:", req.headers.authorization);
+
+
     if (!token) {
       return res.status(401).json({ message: "Not authorized, no token" });
     }

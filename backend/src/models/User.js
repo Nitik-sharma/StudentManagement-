@@ -24,6 +24,22 @@ const userSchema = new mongoose.Schema({
     isActive: {
         type: Boolean,
         default: true
+    },
+    cgpa: {
+        type: Number,
+        default:0
+    },
+    aptitudeScore: {
+        type: Number,
+        default:0
+    },
+    communicationrating: {
+        type: Number,
+        default:0
+    },
+    backlogs: {
+        type: Number,
+        default:0
     }
 
 },

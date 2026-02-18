@@ -1,95 +1,182 @@
-import React from 'react'
+import React from "react";
+import TeacherNav from "./TeacherNav";
+import {
+  Users,
+  FileText,
+  FlaskConical,
+  BookOpen,
+  ArrowRight,
+} from "lucide-react";
 
-function TeacherDeshborad() {
+const TeacherDashboard = () => {
   return (
-    <div className="min-h-screen flex bg-gray-100">
-      {/* Sidebar */}
-      <aside className="w-64 bg-gradient-to-b from-indigo-900 to-indigo-700 text-white hidden md:flex flex-col">
-        <div className="p-6 text-2xl font-bold border-b border-indigo-600">
-          EduPredict
+    <TeacherNav>
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Welcome Section */}
+        <div>
+          <h1 className="text-3xl font-black text-gray-900">Dashboard</h1>
+          <p className="text-gray-500 font-semibold mt-1">
+            Welcome to the Student Management System
+          </p>
         </div>
 
-        <nav className="flex-1 p-4 space-y-2">
-          <button className="w-full text-left px-4 py-2 bg-indigo-800 rounded-lg">
-            Dashboard
-          </button>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <StatCard
+            title="Total Students"
+            value="120"
+            icon={<Users />}
+            color="bg-blue-600"
+            shadow="shadow-blue-100"
+          />
+          <StatCard
+            title="Assignments"
+            value="12"
+            icon={<FileText />}
+            color="bg-orange-500"
+            shadow="shadow-orange-100"
+          />
+          <StatCard
+            title="Mock Tests"
+            value="08"
+            icon={<FlaskConical />}
+            color="bg-purple-600"
+            shadow="shadow-purple-100"
+          />
+          <StatCard
+            title="Courses"
+            value="04"
+            icon={<BookOpen />}
+            color="bg-emerald-600"
+            shadow="shadow-emerald-100"
+          />
+        </div>
 
-          <button className="w-full text-left px-4 py-2 hover:bg-indigo-800 rounded-lg">
-            Manage Attendance
-          </button>
-
-          <button className="w-full text-left px-4 py-2 hover:bg-indigo-800 rounded-lg">
-            Manage Assignments
-          </button>
-
-          <button className="w-full text-left px-4 py-2 hover:bg-indigo-800 rounded-lg">
-            Manage Mock Tests
-          </button>
-
-          <button className="w-full text-left px-4 py-2 hover:bg-indigo-800 rounded-lg">
-            Students
-          </button>
-        </nav>
-
-        <div className="p-4 border-t border-indigo-600">Logout</div>
-      </aside>
-
-      {/* Main */}
-      <main className="flex-1">
-        {/* Navbar */}
-        <header className="bg-white shadow p-4 flex justify-between">
-          <h1 className="text-xl font-semibold">Teacher Dashboard</h1>
-
-          <div className="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center">
-            T
+        {/* Lists Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Recent Students */}
+          <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="font-black text-lg text-gray-800 tracking-tight">
+                Recent Students
+              </h3>
+              <button className="text-indigo-600 font-bold text-xs flex items-center gap-1 hover:underline">
+                View All <ArrowRight size={14} />
+              </button>
+            </div>
+            <div className="space-y-4">
+              <DashboardRow
+                name="Rahul Sharma"
+                detail="Computer Science"
+                badge="Active"
+                initial="R"
+                color="bg-blue-600"
+              />
+              <DashboardRow
+                name="Priya Patel"
+                detail="Information Tech"
+                badge="Active"
+                initial="P"
+                color="bg-blue-600"
+              />
+              <DashboardRow
+                name="Arjun Singh"
+                detail="Electronics"
+                badge="InActive"
+                initial="A"
+                color="bg-blue-600"
+              />
+            </div>
           </div>
-        </header>
 
-        {/* Content */}
-        <div className="p-6">
-          {/* Welcome */}
-          <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6 rounded-xl mb-6">
-            <h2 className="text-2xl font-bold">Welcome, Teacher 👋</h2>
-            <p>Manage students, assignments, and performance.</p>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white p-6 rounded-xl shadow">
-              <p>Total Students</p>
-              <h3 className="text-2xl font-bold text-indigo-600">120</h3>
+          {/* Recent Marks */}
+          <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="font-black text-lg text-gray-800 tracking-tight">
+                Recent Marks
+              </h3>
+              <button className="text-indigo-600 font-bold text-xs flex items-center gap-1 hover:underline">
+                View All <ArrowRight size={14} />
+              </button>
             </div>
-
-            <div className="bg-white p-6 rounded-xl shadow">
-              <p>Assignments</p>
-              <h3 className="text-2xl font-bold text-green-600">45</h3>
+            <div className="space-y-4">
+              <MarkRow
+                name="Rahul Sharma"
+                exam="Data Structures-Mid-term"
+                score="85/100"
+                pct="85.0%"
+              />
+              <MarkRow
+                name="Priya Patel"
+                exam="Database-Final"
+                score="92/100"
+                pct="92.0%"
+              />
+              <MarkRow
+                name="Arjun Singh"
+                exam="Electronics-Mid-term"
+                score="78/100"
+                pct="78.0%"
+              />
             </div>
-
-            <div className="bg-white p-6 rounded-xl shadow">
-              <p>Mock Tests</p>
-              <h3 className="text-2xl font-bold text-purple-600">18</h3>
-            </div>
-
-            <div className="bg-white p-6 rounded-xl shadow">
-              <p>Courses</p>
-              <h3 className="text-2xl font-bold text-orange-600">6</h3>
-            </div>
-          </div>
-
-          {/* Recent Activity */}
-          <div className="bg-white p-6 rounded-xl shadow mt-6">
-            <h3 className="font-semibold mb-4">Recent Activity</h3>
-
-            <ul className="space-y-2 text-gray-600">
-              <li>Uploaded Assignment 3</li>
-              <li>Marked Attendance</li>
-              <li>Added Mock Test Result</li>
-            </ul>
           </div>
         </div>
-      </main>
-    </div>
+      </div>
+    </TeacherNav>
   );
-}
+};
 
-export default TeacherDeshborad
+// --- Sub-components ---
+
+const StatCard = ({ title, value, icon, color, shadow }) => (
+  <div
+    className={`bg-white p-6 rounded-3xl border border-gray-50 shadow-sm transition-transform hover:-translate-y-1`}
+  >
+    <div
+      className={`${color} w-11 h-11 rounded-2xl flex items-center justify-center text-white mb-4 shadow-lg ${shadow}`}
+    >
+      {icon}
+    </div>
+    <p className="text-gray-500 text-xs font-black uppercase tracking-wider">
+      {title}
+    </p>
+    <p className="text-2xl font-black text-gray-900 mt-1">{value}</p>
+  </div>
+);
+
+const DashboardRow = ({ name, detail, badge, initial, color }) => (
+  <div className="flex items-center justify-between p-3.5 bg-[#FFF1F1] rounded-2xl border border-red-50/50">
+    <div className="flex items-center gap-3">
+      <div
+        className={`w-10 h-10 rounded-full ${color} text-white flex items-center justify-center font-bold text-sm`}
+      >
+        {initial}
+      </div>
+      <div>
+        <p className="font-black text-sm text-gray-800">{name}</p>
+        <p className="text-[11px] text-gray-500 font-bold">{detail}</p>
+      </div>
+    </div>
+    <span
+      className={`text-[10px] font-black px-2.5 py-1 rounded-md ${badge === "Active" ? "bg-[#D1FAE5] text-[#059669]" : "bg-[#FEE2E2] text-[#DC2626]"}`}
+    >
+      {badge}
+    </span>
+  </div>
+);
+
+const MarkRow = ({ name, exam, score, pct }) => (
+  <div className="flex items-center justify-between p-3.5 bg-[#FFF1F1] rounded-2xl border border-red-50/50">
+    <div className="min-w-0">
+      <p className="font-black text-sm text-gray-800 truncate">{name}</p>
+      <p className="text-[11px] text-gray-500 font-bold truncate">{exam}</p>
+    </div>
+    <div className="text-right ml-4">
+      <p className="font-black text-sm text-gray-900">{score}</p>
+      <p className="text-[11px] text-green-600 font-black">{pct}</p>
+    </div>
+  </div>
+);
+
+export default TeacherDashboard;
+  

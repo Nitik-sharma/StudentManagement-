@@ -31,3 +31,19 @@ export const markAttandance = async (req, res) => {
         res.status(500).json({message:error.message})
     }
 }
+
+
+export const getAttadance = async (req, res) => {
+    try {
+        const attandance = await Attendance.find({ student: req.user._id }).sort({ createdAt: -1 })
+        
+        res.json({
+            success: true,
+            count: attandance.length,
+            attandance
+        })
+        
+    } catch (error) {
+        res.status(500).json({message:error.message})
+    }
+}

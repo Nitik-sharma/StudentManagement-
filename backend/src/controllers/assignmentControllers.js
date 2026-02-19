@@ -24,3 +24,23 @@ export const addAssignment = async (req, res) => {
         res.status(500).json({message:error.message})
     }
 }
+
+
+export const getMyAssignments = async (req, res) => {
+    try {
+        const assignment = await Assignment.find({ student: req.user._id }).sort({ createAt: -1 })
+       
+        
+        res.json({
+            success: true,
+            count: assignment.length,
+            assignment
+            
+            
+        })
+        
+    } catch (error) {
+        res.status(500).json({message:error.message})
+    }
+}
+

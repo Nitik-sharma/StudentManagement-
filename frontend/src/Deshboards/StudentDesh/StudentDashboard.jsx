@@ -1,14 +1,76 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import StudentNav from "./StudentNav";
 import { CheckCircle, Award, Clock, TrendingUp } from "lucide-react";
+import API from "../../service/api";
+import axios from "axios";
 
 const StudentDashboard = () => {
+  const [profile, setProfile] = useState({})
+  const [attandance,setAttandance]=useState({})
+  const [performance, setPerformance] = useState({})
+  const [assignments, setAssignments] = useState([])
+  
+  useEffect(() => {
+    
+    const fetchData = async () => {
+
+      try {
+        const token = localStorage.getItem("token");
+        console.log(token)
+
+
+        // access user profile 
+      const profileRes = await API.get("/auth/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+        const data = profileRes.data
+        setProfile(data)
+
+        // get user attandance
+
+        const getAttandance = await API.get("/attandance/getAttandance", {
+          headers: {
+            Authorization:`Bearer ${token}`
+          }
+        });
+
+        
+
+      
+        setAttandance(getAttandance.data.attandance[0]);
+
+        // fetch performance data
+
+        const getPerformance = await API.get(
+          `/performance/${profile._id}`, {
+            headers: {
+              Authorization:`Bearer ${token}`
+            }
+          }
+        );
+
+        console.log(getPerformance)
+        
+       
+      } catch (error) {
+        
+      }
+    }
+
+    fetchData()
+  },[])
+
+console.log(profile._id)
+
+
   return (
     <StudentNav>
       <div className="max-w-7xl mx-auto space-y-8">
         <div>
           <h1 className="text-3xl font-black text-gray-900">
-            Welcome back, Rahul!
+            Welcome back, {profile.name}
           </h1>
           <p className="text-gray-500 font-semibold mt-1">
             Here is what's happening with your studies today.
@@ -19,7 +81,21 @@ const StudentDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <SummaryCard
             label="Attendance"
-            value="94.2%"
+            value={attandance.attendancePercentage}
+            sub="Above Average"
+            icon={<Clock />}
+            color="text-blue-600 bg-blue-50"
+          />
+          <SummaryCard
+            label="Attended Class"
+            value={attandance.attendedClasses}
+            sub="Above Average"
+            icon={<Clock />}
+            color="text-blue-600 bg-blue-50"
+          />
+          <SummaryCard
+            label="Total class "
+            value={attandance.totalClass}
             sub="Above Average"
             icon={<Clock />}
             color="text-blue-600 bg-blue-50"

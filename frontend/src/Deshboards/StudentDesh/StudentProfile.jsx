@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import StudentNav from "./StudentNav";
 import {
   User,
@@ -12,21 +12,56 @@ import {
   Hash,
   AlertCircle,
 } from "lucide-react";
+import API from "../../service/api";
+import axios from "axios";
 
 const StudentProfile = () => {
   // Mock student data - In a real app, you would fetch this from your backend
-  const [studentData] = useState({
-    name: "Rahul Sharma",
-    email: "rahul.sharma@university.edu",
-    phone: "+91-9876543210",
-    roll: "CS001",
-    dept: "Computer Science",
-    semester: "6th Semester",
-    address: "Mumbai, Maharashtra",
-    cgpa: "8.42",
+  const [studentData,setStudentData] = useState({
+    name: "",
+    email: "",
+    phone: "676867868",
+    roll: "i768",
+    dept: "hjkhkj",
+    semester: "1st",
+    address: "Guragon",
+    cgpa: "8",
     backlogs: 1, // Will trigger the red alert UI
-    commRating: "4.5/5",
+    commRating: "i",
   });
+    console.log("Hii")
+    
+    useEffect(() => {
+      const fetchProfile = async () => {
+        try {
+          const token = localStorage.getItem("token");
+
+          const res = await API.get("/auth/profile", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          const data = res.data;
+
+          console.log("Profile Data:", data);
+
+          setStudentData((prev) => ({
+            ...prev, // keep existing fields
+            name: data.name || "",
+              email: data.email || "",
+            roll:data._id,
+            cgpa: data.cgpa || "",
+            backlogs: data.backlogs || 0,
+            commRating: data.communicationRating || "",
+          }));
+        } catch (error) {
+          console.log("Profile fetch error:", error);
+        }
+      };
+
+      fetchProfile();
+    }, []);
 
   return (
     <StudentNav>

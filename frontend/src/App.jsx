@@ -18,8 +18,16 @@ import ViewMockMarks from './Deshboards/TeacherDesh/MockTest/ViewMockMarks';
 import PlacemtPridiction from './Deshboards/TeacherDesh/PlacemtPridiction';
 import Profile from './Deshboards/TeacherDesh/Profile';
 
+import StudentPerformance from './Deshboards/TeacherDesh/StudentPerformance';
+import AddAssignments from './Deshboards/TeacherDesh/Assignments/AddAssignments';
+import ViewAssignments from './Deshboards/TeacherDesh/Assignments/ViewAssignments';
+import TeacherDashboard from './Deshboards/TeacherDesh/TeacherDeshborad';
+import StudentDashboard from './Deshboards/StudentDesh/StudentDashboard';
+import Performance from './Deshboards/StudentDesh/Performance'
+import StudentProfile from './Deshboards/StudentDesh/StudentProfile';
+
 function App() {
-  
+
 
   return (
     <>
@@ -34,14 +42,20 @@ function App() {
           <Route path="/attendance" element={<Attendance />} />
           <Route path="/courses" element={<Courses />} />
           <Route path="/marks" element={<Marks />} />
+          <Route path="/TeacherDeshboard" element={<TeacherDashboard />} />
           <Route path="/teacher/students" element={<TeacherStudents />} />
+          <Route path="/assignments/add" element={<AddAssignments />} />
+          <Route path="/assignments/view" element={<ViewAssignments />} />
           <Route path="/attendance/mark" element={<MarkAttendance />} />
           <Route path="/attendance/view" element={<ViewAttendance />} />
-          <Route path="/performance" element={<performance />} />
+          <Route path="/performance" element={<StudentPerformance />} />
           <Route path="/mocktests/add" element={<AddMockMarks />} />
           <Route path="/mocktests/view" element={<ViewMockMarks />} />
           <Route path="/prediction" element={<PlacemtPridiction />} />
-          <Route path="/prfile" element={<Profile />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/student/dashboard" element={<StudentDashboard />} />
+          <Route path="/student/performance" element={<Performance />} />
+          <Route path="/student/profile" element={<StudentProfile/> } />
         </Routes>
       </BrowserRouter>
     </>

@@ -1,75 +1,89 @@
-import React, { useState } from "react";
-import TeacherNav from '../TeacherNav'
+import React, { useState, useEffect } from "react";
+import TeacherNav from "../TeacherNav";
 
-const AddMockMarks = () => {
+const AddAssignments = () => {
   const [formData, setFormData] = useState({
     studentId: "",
-    testName: "",
-    score: "",
+    assignmentName: "",
+    obtainedMarks: "",
     totalMarks: "",
   });
+  const [percentage, setPercentage] = useState(0);
+
+  // Logic: System calculates percentage automatically
+  useEffect(() => {
+    if (
+      formData.obtainedMarks &&
+      formData.totalMarks &&
+      formData.totalMarks > 0
+    ) {
+      const pct = (formData.obtainedMarks / formData.totalMarks) * 100;
+      setPercentage(pct.toFixed(1));
+    } else {
+      setPercentage(0);
+    }
+  }, [formData.obtainedMarks, formData.totalMarks]);
 
   return (
     <TeacherNav>
       <div className="max-w-3xl mx-auto space-y-6">
         <div>
           <h1 className="text-3xl font-black text-gray-900 tracking-tight">
-            Add Mock Marks
+            Add Assignment Marks
           </h1>
-          <p className="text-gray-500 font-semibold text-sans">
-            Enter student scores for conducted mock tests
+          <p className="text-gray-500 font-semibold">
+            Record student scores for class assignments
           </p>
         </div>
 
         <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 space-y-6">
-          {/* Student Selection */}
+          {/* Student Dropdown */}
           <div>
             <label className="block text-sm font-black text-gray-700 mb-2 uppercase tracking-widest">
-              Student
+              Select Student
             </label>
             <select
-              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl font-bold text-gray-700 outline-none focus:ring-2 focus:ring-indigo-100 transition-all"
+              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl font-bold text-gray-700 focus:ring-2 focus:ring-indigo-100 outline-none transition-all"
               onChange={(e) =>
                 setFormData({ ...formData, studentId: e.target.value })
               }
             >
-              <option value="">Select Student...</option>
+              <option value="">Choose a student...</option>
               <option value="1">Rahul Sharma (CS001)</option>
               <option value="2">Priya Patel (IT002)</option>
-              <option value="3">Arjun Singh (EC003)</option>
             </select>
           </div>
 
-          {/* Mock Test Name */}
+          {/* Assignment Name */}
           <div>
             <label className="block text-sm font-black text-gray-700 mb-2 uppercase tracking-widest">
-              Mock Test Name
+              Assignment Name
             </label>
             <input
               type="text"
-              placeholder="e.g. Full Length Mock - 01"
-              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl font-bold focus:ring-2 focus:ring-indigo-100 outline-none transition-all"
+              placeholder="e.g. Data Structures - Lab 1"
+              className="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl font-bold"
               onChange={(e) =>
-                setFormData({ ...formData, testName: e.target.value })
+                setFormData({ ...formData, assignmentName: e.target.value })
               }
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Score */}
+            {/* Marks Obtained */}
             <div>
               <label className="block text-sm font-black text-gray-700 mb-2 uppercase tracking-widest">
-                Score Obtained
+                Marks Obtained
               </label>
               <input
                 type="number"
                 className="w-full p-4 bg-gray-50 border border-gray-200 rounded-2xl font-bold"
                 onChange={(e) =>
-                  setFormData({ ...formData, score: e.target.value })
+                  setFormData({ ...formData, obtainedMarks: e.target.value })
                 }
               />
             </div>
-            {/* Total */}
+            {/* Total Marks */}
             <div>
               <label className="block text-sm font-black text-gray-700 mb-2 uppercase tracking-widest">
                 Total Marks
@@ -84,8 +98,23 @@ const AddMockMarks = () => {
             </div>
           </div>
 
+          {/* Auto-calculated Result */}
+          <div className="p-6 bg-indigo-50 rounded-3xl flex justify-between items-center border border-indigo-100">
+            <div>
+              <p className="text-indigo-400 text-[10px] font-black uppercase tracking-widest mb-1">
+                Calculation Result
+              </p>
+              <p className="text-indigo-900 font-bold">Percentage Achieved</p>
+            </div>
+            <div className="text-right">
+              <span className="text-4xl font-black text-indigo-600">
+                {percentage}%
+              </span>
+            </div>
+          </div>
+
           <button className="w-full py-5 bg-[#4F46E5] text-white font-black rounded-2xl shadow-xl shadow-indigo-100 hover:bg-indigo-700 transition-all transform active:scale-[0.98]">
-            Submit Mock Score
+            Submit Marks
           </button>
         </div>
       </div>
@@ -93,4 +122,4 @@ const AddMockMarks = () => {
   );
 };
 
-export default AddMockMarks;
+export default AddAssignments;

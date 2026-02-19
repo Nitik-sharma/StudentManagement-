@@ -1,5 +1,5 @@
 import React from 'react'
-import StudentDeshboard from '../Deshboards/StudentDesh/StudentDeshboard'
+import StudentDashboard from '../Deshboards/StudentDesh/StudentDashboard'
 import TeacherDeshborad from '../Deshboards/TeacherDesh/TeacherDeshborad'
 import AdminDeshboard from '../Deshboards/Admin/AdminDeshboard'
 
@@ -10,7 +10,7 @@ function Deshboard() {
     console.log(role)
   return (
     <div>
-      {role === "student" && <StudentDeshboard />}
+      {role === "student" && <StudentDashboard />}
       {role === "teacher" && <TeacherDeshborad />}
       {role === "admin" && <AdminDeshboard />}
     </div>

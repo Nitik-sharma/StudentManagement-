@@ -17,7 +17,7 @@ const menuItems = [
   {
     id: "dashboard",
     name: "Dashboard",
-    path: "/",
+    path: "/TeacherDeshboard",
     icon: <LayoutDashboard size={18} />,
   },
   {
@@ -60,7 +60,7 @@ const menuItems = [
     id: "performance",
     name: "Performance",
     path: "/performance",
-    icon: <LineChart size={18} />, 
+    icon: <LineChart size={18} />,
   },
   {
     id: "prediction",

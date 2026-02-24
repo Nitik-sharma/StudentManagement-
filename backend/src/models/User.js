@@ -40,7 +40,21 @@ const userSchema = new mongoose.Schema({
     backlogs: {
         type: Number,
         default:0
-    }
+    },
+    phone: {
+  type: String,
+        trim: true,
+  match: [/^[0-9]{10}$/, "Please enter valid phone number"],
+    },
+    rollNo: {
+  type: String,
+  trim: true,
+},
+
+course: {
+  type: String,
+  
+},
 
 },
     {

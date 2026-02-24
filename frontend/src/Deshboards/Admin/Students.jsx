@@ -1,50 +1,71 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import AdminNavbar from './AdminNavbar';
+import API from '../../service/api'
+import { Link } from 'react-router-dom';
 
 function Students() {
-  const students = [
-    {
-      name: "Rahul Sharma",
-      roll: "CS001",
-      email: "rahul@email.com",
-      course: "Computer Science",
-      phone: "+91-9867543001",
-      location: "Mumbai, Maharashtra",
-      status: "Active",
-      initial: "R",
-      focus: true,
-    },
-    {
-      name: "Priya Patel",
-      roll: "IT002",
-      email: "priya@email.com",
-      course: "IT",
-      phone: "+91-9867543001",
-      location: "Ahmedabad, Gujarat",
-      status: "Active",
-      initial: "P",
-    },
-    {
-      name: "Sneha Gupta",
-      roll: "ME004",
-      email: "sneha@email.com",
-      course: "Mechanical",
-      phone: "+91-9867543001",
-      location: "Pune, Maharashtra",
-      status: "Inactive",
-      initial: "S",
-    },
-    {
-      name: "Arjun Singh",
-      roll: "EC003",
-      email: "arjun@email.com",
-      course: "Electronics",
-      phone: "+91-9867543001",
-      location: "Delhi, India",
-      status: "Active",
-      initial: "A",
-    },
-  ];
+  // const students = [
+  //   {
+  //     name: "Rahul Sharma",
+  //     roll: "CS001",
+  //     email: "rahul@email.com",
+  //     course: "Computer Science",
+  //     phone: "+91-9867543001",
+  //     location: "Mumbai, Maharashtra",
+  //     status: "Active",
+  //     initial: "R",
+  //     focus: true,
+  //   },
+  //   {
+  //     name: "Priya Patel",
+  //     roll: "IT002",
+  //     email: "priya@email.com",
+  //     course: "IT",
+  //     phone: "+91-9867543001",
+  //     location: "Ahmedabad, Gujarat",
+  //     status: "Active",
+  //     initial: "P",
+  //   },
+  //   {
+  //     name: "Sneha Gupta",
+  //     roll: "ME004",
+  //     email: "sneha@email.com",
+  //     course: "Mechanical",
+  //     phone: "+91-9867543001",
+  //     location: "Pune, Maharashtra",
+  //     status: "Inactive",
+  //     initial: "S",
+  //   },
+  //   {
+  //     name: "Arjun Singh",
+  //     roll: "EC003",
+  //     email: "arjun@email.com",
+  //     course: "Electronics",
+  //     phone: "+91-9867543001",
+  //     location: "Delhi, India",
+  //     status: "Active",
+  //     initial: "A",
+  //   },
+  // ];
+
+  const [students, setStudents] = useState([]);
+  
+  useEffect(() => {
+    const token=localStorage.getItem("token")
+    const getStudents =async () => {
+      const studeentsData = await API.get("/admin/students", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
+      const getData = studeentsData.data.students;
+      // console.log(getData)
+      setStudents(getData)
+    }
+    getStudents()
+  },[])
+   console.log(students)
   return (
     <AdminNavbar>
       <div className="max-w-7xl mx-auto">
@@ -62,9 +83,11 @@ function Students() {
               </button>
               <button className="px-4 py-1 text-gray-500">Table</button>
             </div>
-            <button className="bg-[#4F46E5] text-white px-6 py-2 rounded-lg font-bold shadow-lg shadow-indigo-200">
-              Add Student
-            </button>
+            <Link to={"/add-student"}>
+              <button className="bg-[#4F46E5] text-white px-6 py-2 rounded-lg font-bold shadow-lg shadow-indigo-200">
+                Add Student
+              </button>
+            </Link>
           </div>
         </div>
 

@@ -25,8 +25,8 @@ const StudentDashboard = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-        const data = profileRes.data
-        setProfile(data)
+        const profileData = profileRes.data
+        setProfile(profileData)
 
         // get user attandance
 
@@ -44,12 +44,17 @@ const StudentDashboard = () => {
         // fetch performance data
 
         const getPerformance = await API.get(
-          `/performance/${profile._id}`, {
+          `/performance/${profileData._id}`,
+          {
             headers: {
-              Authorization:`Bearer ${token}`
-            }
-          }
+              Authorization: `Bearer ${token}`,
+            },
+          },
         );
+
+        const performanceData = getPerformance.data
+        
+        setPerformance(performanceData)
 
         console.log(getPerformance)
         
@@ -60,9 +65,11 @@ const StudentDashboard = () => {
     }
 
     fetchData()
-  },[])
+  }, [])
+  
 
-console.log(profile._id)
+
+console.log(performance)
 
 
   return (
@@ -102,7 +109,9 @@ console.log(profile._id)
           />
           <SummaryCard
             label="Current CGPA"
-            value="8.42"
+            value={performance.cgpa>0?performance.
+cgpa:"0"
+}
             sub="+0.2 from last sem"
             icon={<Award />}
             color="text-indigo-600 bg-indigo-50"

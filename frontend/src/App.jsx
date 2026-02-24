@@ -25,6 +25,7 @@ import TeacherDashboard from './Deshboards/TeacherDesh/TeacherDeshborad';
 import StudentDashboard from './Deshboards/StudentDesh/StudentDashboard';
 import Performance from './Deshboards/StudentDesh/Performance'
 import StudentProfile from './Deshboards/StudentDesh/StudentProfile';
+import AddStudentForm from './Deshboards/Admin/AddStudentForm';
 
 function App() {
 
@@ -55,7 +56,8 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/student/dashboard" element={<StudentDashboard />} />
           <Route path="/student/performance" element={<Performance />} />
-          <Route path="/student/profile" element={<StudentProfile/> } />
+          <Route path="/student/profile" element={<StudentProfile />} />
+          <Route path='/add-student' element={ <AddStudentForm/>} />
         </Routes>
       </BrowserRouter>
     </>

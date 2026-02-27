@@ -11,6 +11,7 @@ import API from "../../service/api";
 import { useNavigate } from "react-router-dom";
 
 const AddStudentForm = () => {
+  
   const navigate=useNavigate()
   const [formData, setFormData] = useState({
     name: "",

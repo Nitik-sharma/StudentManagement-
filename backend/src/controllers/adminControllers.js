@@ -42,6 +42,8 @@ export const updateDetails = async (req, res) => {
     try {
         const { rollNo, course, phone } = req.body;
         const student = await User.findById(req.params.id)
+        console.log("PARAM ID:", req.params.id);
+        console.log("FOUND STUDENT:", student);
         if (!student) {
             res.status(404).json({message:"Student not found "})
         }
@@ -61,3 +63,24 @@ export const updateDetails = async (req, res) => {
         res.status(500).json({message:error.message})
     }
 }
+
+
+export const getStudent = async (req, res) => {
+    try {
+        const student = await User.findById(req.params.id).populate("course", "name code")
+        
+        if (!student) {
+            return res.status(404).json({ message: "Student not found " })
+            
+        }
+
+        res.json({
+            success: true,
+            student
+        })
+        
+    } catch (error) {
+        res.status(500).json({message:error.message})
+    }
+}
+

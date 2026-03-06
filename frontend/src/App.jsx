@@ -27,6 +27,7 @@ import Performance from './Deshboards/StudentDesh/Performance'
 import StudentProfile from './Deshboards/StudentDesh/StudentProfile';
 import AddStudentForm from './Deshboards/Admin/AddStudentForm';
 import EditStudentForm from './Deshboards/Admin/EditStudentForm';
+import AddCourse from './Deshboards/Admin/AddCourse';
 
 function App() {
 
@@ -60,6 +61,7 @@ function App() {
           <Route path="/student/profile" element={<StudentProfile />} />
           <Route path="/add-student" element={<AddStudentForm />} />
           <Route path="/edit-student/:id" element={<EditStudentForm />} />
+          <Route path="/add-course" element={ <AddCourse/>} />
         </Routes>
       </BrowserRouter>
     </>

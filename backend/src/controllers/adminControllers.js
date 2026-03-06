@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-
+import Course from "../models/courseModels.js";
 
 
 export const getAllStudent = async (req, res) => {
@@ -84,3 +84,47 @@ export const getStudent = async (req, res) => {
     }
 }
 
+
+// ADD Course
+
+export const addCourse = async (req, res) => {
+    try {
+        const { name, code, instructor, duration, fees } = req.body
+        const courseExist = await Course.findOne({ code })
+        
+        if (courseExist) {
+            return res.status(400).json({message:"Course with this code already exist"})
+        }
+
+        const course = await Course.create({
+            name,
+            code,
+            instructor,
+            duration,
+            fees
+        })
+
+        res.status(201).json({
+            message: "Course is added sucessfully ",
+            course
+        })
+    } catch (error) {
+        res.status(500).json({message:error.message})
+    }
+}
+
+// get all courses
+
+export const getAllCourses = async (req, res) => {
+    try {
+        const courses = await Course.find().sort({ createdAt: -1 })
+        
+        res.json({
+            success: true,
+            count: courses.length,
+            courses,
+        });
+    } catch (error) {
+         res.status(500).json({ message: error.message });
+    }
+}

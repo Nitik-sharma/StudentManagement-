@@ -1,13 +1,41 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import AdminNavbar from './AdminNavbar';
+import { Link } from 'react-router-dom';
+import API from '../../service/api';
 
 function Courses() {
-  const courseList = [
-    { name: "Computer Science", code: "CS", instructor: "Dr. Rajesh Kumar", students: 45, duration: "4 Years", fees: "2,50,000" },
-    { name: "Information Technology", code: "IT", instructor: "Prof. Sunita Sharma", students: 38, duration: "4 Years", fees: "2,30,000" },
-    { name: "Electronics Engineering", code: "EC", instructor: "Dr. Amit Verma", students: 32, duration: "4 Years", fees: "2,40,000" },
-    { name: "Mechanical Engineering", code: "ME", instructor: "Prof. Ravi Gupta", students: 28, duration: "4 Years", fees: "2,20,000" },
-  ];
+  // const courseList = [
+  //   { name: "Computer Science", code: "CS", instructor: "Dr. Rajesh Kumar", students: 45, duration: "4 Years", fees: "2,50,000" },
+  //   { name: "Information Technology", code: "IT", instructor: "Prof. Sunita Sharma", students: 38, duration: "4 Years", fees: "2,30,000" },
+  //   { name: "Electronics Engineering", code: "EC", instructor: "Dr. Amit Verma", students: 32, duration: "4 Years", fees: "2,40,000" },
+  //   { name: "Mechanical Engineering", code: "ME", instructor: "Prof. Ravi Gupta", students: 28, duration: "4 Years", fees: "2,20,000" },
+  // ];
+
+  
+
+  const [courseList, setCourseList]=useState([]);
+const token=localStorage.getItem("token")
+  useEffect(() => {
+    const getCourse = async () => {
+     try {
+       const res = await API.get("/admin/get-courses", {
+         headers: {
+          Authorization:`Bearer ${token}`
+        }
+       })
+       
+       const courses = res.data.courses;
+       console.log(courses)
+
+       setCourseList(courses)
+
+       
+     } catch (error) {
+      
+     }
+    }
+    getCourse()
+  },[])
 
   return (
     <AdminNavbar>
@@ -19,9 +47,12 @@ function Courses() {
               Manage courses information
             </p>
           </div>
-          <button className="bg-[#4F46E5] text-white px-6 py-2 rounded-lg font-bold">
-            Add Course
-          </button>
+
+          <Link to={"/add-course"}>
+            <button className="bg-[#4F46E5] text-white px-6 py-2 rounded-lg font-bold">
+              Add Course
+            </button>
+          </Link>
         </div>
 
         <div className="bg-white rounded-xl border-2 border-blue-400 overflow-hidden shadow-sm">

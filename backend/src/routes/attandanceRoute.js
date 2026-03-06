@@ -1,10 +1,15 @@
 import express from "express"
 import { authorizeRoles, protect } from "../middleware/middleware.js"
-import { getAttadance, markAttandance } from "../controllers/attandanceController.js"
+
+import { getAttendanceByDate, markAttendance } from "../controllers/attendanceController.js"
+
 
 
 const router = express.Router()
-router.post("/", protect, authorizeRoles("teacher", "admin"), markAttandance)
-router.get("/getAttandance",protect,getAttadance)
+
+
+router.post("/mark", protect, authorizeRoles("teacher", "admin"), markAttendance)
+router.get("/date",protect,authorizeRoles("teeacher","admin"),getAttendanceByDate)
+
 
 export default router

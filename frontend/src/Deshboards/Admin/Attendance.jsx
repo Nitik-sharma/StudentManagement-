@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AdminNavbar from "./AdminNavbar";
+import API from "../../service/api";
 
 // 1. Move helper components outside or keep them at the bottom
 const StatSmallCard = ({ label, value, color }) => (
@@ -18,38 +19,99 @@ const StatSmallCard = ({ label, value, color }) => (
 
 function Attendance() {
   // 2. Data goes inside the function but before the return
-  const students = [
-    {
-      name: "Rahul Sharma",
-      dept: "Computer Science",
-      initial: "R",
-      status: "Absent",
-    },
-    {
-      name: "Priya Patel",
-      dept: "Information Technology",
-      initial: "P",
-      status: "Absent",
-    },
-    {
-      name: "Arjun Singh",
-      dept: "Electronics",
-      initial: "A",
-      status: "Present",
-    },
-    {
-      name: "Sneha Gupta",
-      dept: "Mechanical Engineering",
-      initial: "S",
-      status: "Present",
-    },
-    {
-      name: "Vikram Kumar",
-      dept: "Computer Science",
-      initial: "V",
-      status: "Present",
-    },
-  ];
+  const [students, setStudents] = useState([]);
+  const [date,setDate]=useState("")
+  const token = localStorage.getItem("token");
+  const [presentCount, setPresentCount] = useState(0)
+  const [absentCount, setAbsentCount] = useState(0)
+  
+  useEffect(() => {
+   
+    const getStudent = async() => {
+    try {
+      const res = await API.get("/admin/students", {
+        headers: {
+          Authorization:`Bearer ${token}`
+        }
+      });
+
+      const student = res.data.students;
+
+      // console.log(student)
+      
+      setStudents(student)
+      
+
+    } catch (error) {
+      
+    }
+    }
+    getStudent()
+  }, [])
+
+  const markAttendance = async (studentId, status) => {
+     if (!date) {
+       alert("Please select a date first");
+       return;
+     }
+
+    try {
+      await API.post("/attendance/mark", {
+        studentId,
+        status,
+        date
+      }, {
+        headers: {
+          Authorization:`Bearer ${token}`
+        }
+      });
+
+      if (status === 'Present') {
+        setPresentCount(prev=>prev+1)
+      } else {
+        setAbsentCount(prev=>prev+1)
+      }
+
+
+
+      alert("Attendence marked successfully ")
+    } catch (error) {
+      alert(error.message)
+    }
+  }
+
+  useEffect(() => {
+    if (!date) {
+      return
+    }
+
+    const fetchData = async () => {
+      try {
+        const res = await API.get(`/attendance/date?date=${date}`, {
+          headers: {
+            Authorization:`Bearer ${token}`
+          }
+        });
+
+      
+        const attendance = res.data.attendance;
+
+        const absent = attendance.filter((a) => a.status === "Absent").length;
+        const present = attendance.filter((a) => a.status === "Present").length;
+
+        
+        setAbsentCount(absent)
+        setPresentCount(present)
+        console.log(attendance)
+      } catch (error) {
+        
+      }
+    }
+
+    fetchData()
+  },[date])
+  
+  console.log(students)
 
   return (
     <AdminNavbar>
@@ -67,6 +129,8 @@ function Attendance() {
               type="date"
               defaultValue="2025-09-24"
               className="w-full border p-2 rounded-lg focus:outline-blue-400"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
             />
           </div>
           <div className="flex-1 min-w-[200px]">
@@ -84,9 +148,9 @@ function Attendance() {
 
         {/* Stats Summary */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <StatSmallCard label="Total Students" value="5" color="bg-blue-600" />
-          <StatSmallCard label="Present" value="3" color="bg-green-500" />
-          <StatSmallCard label="Absent" value="2" color="bg-red-400" />
+          <StatSmallCard label="Total Students" value={students.length} color="bg-blue-600" />
+          <StatSmallCard label="Present" value={presentCount} color="bg-green-500" />
+          <StatSmallCard label="Absent" value={absentCount} color="bg-red-400" />
         </div>
 
         {/* List */}
@@ -113,11 +177,13 @@ function Attendance() {
                 </div>
                 <div className="flex gap-2">
                   <button
+                    onClick={() => markAttendance(s._id, "Present")}
                     className={`px-6 py-1.5 rounded-lg text-xs font-black transition-all ${s.status === "Present" ? "bg-green-500 text-white shadow-md" : "bg-gray-200 text-gray-600 hover:bg-gray-300"}`}
                   >
                     Present
                   </button>
                   <button
+                    onClick={() => markAttendance(s._id, "Absent")}
                     className={`px-6 py-1.5 rounded-lg text-xs font-black transition-all ${s.status === "Absent" ? "bg-red-400 text-white shadow-md" : "bg-gray-200 text-gray-600 hover:bg-gray-300"}`}
                   >
                     Absent

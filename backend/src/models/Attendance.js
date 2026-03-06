@@ -6,10 +6,10 @@ const AttendanceSchema = new mongoose.Schema({
         ref: "User",
         required:true
     },
-    course: {
-        type: String,
-        required:true
-    },
+     course: {
+    type: String,
+    
+  },
     totalClass: {
         type: Number,
         required: true,
@@ -25,6 +25,15 @@ const AttendanceSchema = new mongoose.Schema({
         type: Number,
         default:0
     },
+    date: {
+    type: Date,
+    required: true
+  },
+    status: {
+    type: String,
+    enum: ["Present", "Absent"],
+    required: true
+  },
     markedBy:{
         type: mongoose.Schema.Types.ObjectId,
         ref:"User"

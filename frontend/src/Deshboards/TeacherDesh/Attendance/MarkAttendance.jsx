@@ -1,19 +1,102 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import TeacherNav from "../TeacherNav";
+import API from "../../../service/api";
 
 const MarkAttendance = () => {
-  const [attendance, setAttendance] = useState([
-    { id: 1, name: "Rahul Sharma", roll: "CS001", initial: "R", status: null },
-    { id: 2, name: "Priya Patel", roll: "IT002", initial: "P", status: null },
-    { id: 3, name: "Arjun Singh", roll: "EC003", initial: "A", status: null },
-    { id: 4, name: "Sneha Gupta", roll: "ME004", initial: "S", status: null },
-  ]);
-
-  const toggleStatus = (id, status) => {
-    setAttendance((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, status } : s)),
-    );
-  };
+  const [students, setStudents] = useState([]);
+    const [date,setDate]=useState("")
+    const token = localStorage.getItem("token");
+    const [presentCount, setPresentCount] = useState(0)
+    const [absentCount, setAbsentCount] = useState(0)
+    
+    useEffect(() => {
+     
+      const getStudent = async() => {
+      try {
+        const res = await API.get("/admin/students", {
+          headers: {
+            Authorization:`Bearer ${token}`
+          }
+        });
+  
+        const student = res.data.students;
+  
+        // console.log(student)
+        
+        setStudents(student)
+        
+  
+      } catch (error) {
+        
+      }
+      }
+      getStudent()
+    }, [])
+  
+    const markAttendance = async (studentId, status) => {
+       if (!date) {
+         alert("Please select a date first");
+         return;
+       }
+  
+      try {
+        await API.post("/attendance/mark", {
+          studentId,
+          status,
+          date
+        }, {
+          headers: {
+            Authorization:`Bearer ${token}`
+          }
+        });
+  
+        if (status === 'Present') {
+          setPresentCount(prev=>prev+1)
+        } else {
+          setAbsentCount(prev=>prev+1)
+        }
+  
+  
+  
+        alert("Attendence marked successfully ")
+      } catch (error) {
+        alert(error.message)
+      }
+    }
+  
+    useEffect(() => {
+      if (!date) {
+        return
+      }
+  
+      const fetchData = async () => {
+        try {
+          const res = await API.get(`/attendance/date?date=${date}`, {
+            headers: {
+              Authorization:`Bearer ${token}`
+            }
+          });
+  
+        
+          const attendance = res.data.attendance;
+  
+          const absent = attendance.filter((a) => a.status === "Absent").length;
+          const present = attendance.filter((a) => a.status === "Present").length;
+  
+          
+          setAbsentCount(absent)
+          setPresentCount(present)
+          console.log(attendance)
+        } catch (error) {
+          
+        }
+      }
+  
+      fetchData()
+    },[date])
+    
+    console.log(students)
+  
 
   return (
     <TeacherNav>
@@ -44,8 +127,10 @@ const MarkAttendance = () => {
             </label>
             <input
               type="date"
-              className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl font-bold text-gray-700"
-              defaultValue="2026-02-19"
+              defaultValue="2025-09-24"
+              className="w-full border p-2 rounded-lg focus:outline-blue-400"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
             />
           </div>
           <button className="bg-indigo-600 text-white px-8 py-3.5 rounded-xl font-black text-sm shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all w-full md:w-auto">
@@ -64,7 +149,7 @@ const MarkAttendance = () => {
             </span>
           </div>
           <div className="divide-y divide-gray-100">
-            {attendance.map((student) => (
+            {students.map((student) => (
               <div
                 key={student.id}
                 className="flex items-center justify-between p-5 hover:bg-gray-50/50 transition-colors"
@@ -86,14 +171,14 @@ const MarkAttendance = () => {
                 {/* Status Toggles */}
                 <div className="flex bg-gray-100 p-1 rounded-xl gap-1">
                   <button
-                    onClick={() => toggleStatus(student.id, "Present")}
-                    className={`px-6 py-2 rounded-lg text-xs font-black transition-all ${student.status === "Present" ? "bg-green-500 text-white shadow-md" : "text-gray-500 hover:bg-gray-200"}`}
+                    onClick={() => markAttendance(student._id, "Present")}
+                    className={`px-6 py-1.5 rounded-lg text-xs font-black transition-all ${student.status === "Present" ? "bg-green-500 text-white shadow-md" : "bg-gray-200 text-gray-600 hover:bg-gray-300"}`}
                   >
                     Present
                   </button>
                   <button
-                    onClick={() => toggleStatus(student.id, "Absent")}
-                    className={`px-6 py-2 rounded-lg text-xs font-black transition-all ${student.status === "Absent" ? "bg-red-500 text-white shadow-md" : "text-gray-500 hover:bg-gray-200"}`}
+                    onClick={() => markAttendance(student._id, "Absent")}
+                    className={`px-6 py-1.5 rounded-lg text-xs font-black transition-all ${student.status === "Absent" ? "bg-red-400 text-white shadow-md" : "bg-gray-200 text-gray-600 hover:bg-gray-300"}`}
                   >
                     Absent
                   </button>

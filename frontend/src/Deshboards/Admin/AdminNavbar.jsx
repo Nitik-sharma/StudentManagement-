@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Users,
@@ -8,10 +8,42 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import API from "../../service/api";
 
 const AdminNavbar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate=useNavigate()
+
+  const [data, setData] = useState([])
+  const token=localStorage.getItem("token")
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await API.get("/auth/profile", {
+          headers: {
+            Authorization:`Bearer ${token}`
+          }
+        });
+
+        console.log("res", res.data.name);
+        const self = res.data;
+        setData(self)
+      } catch (error) {
+        
+      }
+    }
+
+    fetchData()
+  }, [])
+
+ 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login")
+  }
+  
+
 
   const menuItems = [
     {
@@ -103,10 +135,10 @@ const AdminNavbar = ({ children }) => {
                 A
               </div>
               <span className="hidden sm:inline text-sm font-semibold text-gray-600">
-                Admin
+                {data.name  }
               </span>
             </div>
-            <button className="bg-[#FF8A8A] hover:bg-red-500 text-white px-3 lg:px-5 py-1.5 rounded-lg text-sm font-bold transition-colors">
+            <button onClick={handleLogout} className="bg-[#FF8A8A] hover:bg-red-500 text-white px-3 lg:px-5 py-1.5 rounded-lg text-sm font-bold transition-colors">
               Logout
             </button>
           </div>

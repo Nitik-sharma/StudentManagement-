@@ -1,38 +1,64 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TeacherNav from "../TeacherNav";
+import API from "../../../service/api";
 import { Calendar, Users, CheckCircle, XCircle } from "lucide-react";
 
 const ViewAttendance = () => {
-  const history = [
-    {
-      date: "Feb 18, 2026",
-      course: "Computer Science",
-      total: 120,
-      present: 115,
-      absent: 5,
-      pct: "95.8%",
-    },
-    {
-      date: "Feb 17, 2026",
-      course: "Computer Science",
-      total: 120,
-      present: 110,
-      absent: 10,
-      pct: "91.6%",
-    },
-    {
-      date: "Feb 16, 2026",
-      course: "Computer Science",
-      total: 120,
-      present: 118,
-      absent: 2,
-      pct: "98.3%",
-    },
-  ];
+  const [history, setHistory] = useState([]);
+  const [date, setDate] = useState("");
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (!date) return;
+
+    const fetchData = async () => {
+      try {
+        const res = await API.get(`/attendance/date?date=${date}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const attendance = res.data.attendance;
+
+        const present = attendance.filter((a) => a.status === "Present").length;
+        const absent = attendance.filter((a) => a.status === "Absent").length;
+        const total = attendance.length;
+
+        const pct = total ? ((present / total) * 100).toFixed(1) + "%" : "0%";
+
+        const record = {
+          date: new Date(date).toLocaleDateString(),
+          course: attendance[0]?.course || "-",
+          present,
+          absent,
+          pct,
+        };
+
+        setHistory([record]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [date]);
+
+  // stats calculation
+  const avgAttendance = history.length
+    ? history.reduce((sum, h) => sum + parseFloat(h.pct), 0) / history.length
+    : 0;
+
+  const highestPresent = history.length
+    ? Math.max(...history.map((h) => h.present))
+    : 0;
+
+  const totalAbsent = history.reduce((sum, h) => sum + h.absent, 0);
 
   return (
     <TeacherNav>
       <div className="max-w-7xl mx-auto space-y-8">
+        {/* Header */}
         <div>
           <h1 className="text-3xl font-black text-gray-900 tracking-tight">
             Attendance History
@@ -42,24 +68,36 @@ const ViewAttendance = () => {
           </p>
         </div>
 
+        {/* Date Picker */}
+        <div>
+          <input
+            type="date"
+            className="border p-2 rounded-lg"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+        </div>
+
         {/* Summary Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <AttendanceStat
             icon={<Users />}
             label="Avg. Attendance"
-            value="94.2%"
+            value={avgAttendance ? avgAttendance.toFixed(1) + "%" : "0%"}
             color="bg-blue-600"
           />
+
           <AttendanceStat
             icon={<CheckCircle />}
             label="Highest Present"
-            value="118"
+            value={highestPresent}
             color="bg-green-500"
           />
+
           <AttendanceStat
             icon={<XCircle />}
             label="Total Absentees"
-            value="17"
+            value={totalAbsent}
             color="bg-red-400"
           />
         </div>
@@ -86,22 +124,27 @@ const ViewAttendance = () => {
                 </th>
               </tr>
             </thead>
+
             <tbody className="divide-y divide-gray-100">
               {history.map((item, i) => (
                 <tr key={i} className="hover:bg-gray-50/50 transition-colors">
                   <td className="p-5 font-bold text-gray-800 flex items-center gap-2">
-                    <Calendar size={14} className="text-indigo-500" />{" "}
+                    <Calendar size={14} className="text-indigo-500" />
                     {item.date}
                   </td>
+
                   <td className="p-5 font-semibold text-gray-600 text-sm">
                     {item.course}
                   </td>
+
                   <td className="p-5 text-center font-black text-green-600 text-sm">
                     {item.present}
                   </td>
+
                   <td className="p-5 text-center font-black text-red-400 text-sm">
                     {item.absent}
                   </td>
+
                   <td className="p-5 text-right">
                     <span className="bg-indigo-50 text-indigo-600 px-3 py-1 rounded-lg font-black text-xs">
                       {item.pct}
@@ -124,10 +167,12 @@ const AttendanceStat = ({ icon, label, value, color }) => (
     >
       {icon}
     </div>
+
     <div>
       <p className="text-gray-400 text-[10px] font-black uppercase tracking-wider">
         {label}
       </p>
+
       <p className="text-2xl font-black text-gray-800 leading-none mt-1">
         {value}
       </p>

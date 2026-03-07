@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import TeacherNav from "./TeacherNav";
 import {
   User,
@@ -10,9 +10,37 @@ import {
   Camera,
   ShieldCheck,
 } from "lucide-react";
+import API from "../../service/api";
 
 const Profile = () => {
   const [isEditing, setIsEditing] = useState(false);
+   const [data, setData] = useState([])
+      const token=localStorage.getItem("token")
+      useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const res = await API.get("/auth/profile", {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            });
+  
+            console.log(res.data.name)
+            const self = res.data;
+  
+            setData(self)
+    
+          
+          } catch (error) {
+            console.log(error.message)
+          }
+        }
+    
+        fetchData()
+      }, [])
+    
+    
+    
 
   return (
     <TeacherNav>
@@ -35,7 +63,7 @@ const Profile = () => {
             <div className="text-center md:text-left flex-1">
               <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-4 mb-2">
                 <h1 className="text-3xl font-black text-gray-900 tracking-tight">
-                  Prof. Harrison
+                  {data.name}
                 </h1>
                 <span className="bg-emerald-100 text-emerald-600 px-3 py-1 rounded-lg text-[10px] font-black uppercase tracking-widest flex items-center gap-1 w-fit mx-auto md:mx-0">
                   <ShieldCheck size={12} /> Verified Faculty
@@ -45,7 +73,7 @@ const Profile = () => {
                 Senior Faculty • Dept. of Computer Science
               </p>
               <p className="text-indigo-500 font-semibold mt-2 text-sm">
-                Joined: August 2021
+                {new Date(data.createdAt).toLocaleDateString()}
               </p>
             </div>
 
@@ -74,13 +102,13 @@ const Profile = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <ProfileInput
                   label="Full Name"
-                  value="Harrison Ford"
+                  value={data.name}
                   icon={<User size={16} />}
                   disabled={!isEditing}
                 />
                 <ProfileInput
                   label="Email Address"
-                  value="harrison.f@university.edu"
+                  value={data.email}
                   icon={<Mail size={16} />}
                   disabled={!isEditing}
                 />
@@ -92,7 +120,7 @@ const Profile = () => {
                 />
                 <ProfileInput
                   label="Employee ID"
-                  value="EMP-FAC-2021-09"
+                  value={data._id}
                   icon={<Award size={16} />}
                   disabled={true}
                 />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -12,6 +12,7 @@ import {
   LogOut,
   ChevronDown,
 } from "lucide-react";
+import API from "../../service/api";
 
 const menuItems = [
   {
@@ -29,7 +30,7 @@ const menuItems = [
   {
     id: "attendance",
     name: "Attendance",
-    path: "teacher/attendance",
+    path: "",
     icon: <CheckSquare size={18} />,
     subItems: [
       { name: "Mark Attendance", path: "/attendance/mark" },
@@ -77,6 +78,42 @@ const menuItems = [
 ];
 
 const TeacherNav = ({ children }) => {
+
+  console.log("hello")
+  const [data, setData] = useState([])
+    const token=localStorage.getItem("token")
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const res = await API.get("/auth/profile", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          console.log(res.data.name)
+          const self = res.data;
+
+          setData(self)
+  
+        
+        } catch (error) {
+          console.log(error.message)
+        }
+      }
+  
+      fetchData()
+    }, [])
+  
+  
+  
+  
+  
+   
+    const handleLogout = () => {
+      localStorage.removeItem("token");
+      navigate("/login")
+    }
   return (
     <div className="flex min-h-screen bg-white font-sans antialiased">
       {/* SIDEBAR */}
@@ -126,12 +163,7 @@ const TeacherNav = ({ children }) => {
         </nav>
 
         {/* Bottom Logout */}
-        <div className="p-4 border-t border-gray-50">
-          <button className="w-full flex items-center gap-3 px-4 py-3 text-red-400 font-bold hover:bg-red-50 rounded-xl transition-all">
-            <LogOut size={18} />
-            <span>Logout</span>
-          </button>
-        </div>
+       
       </aside>
 
       {/* MAIN CONTENT AREA */}
@@ -149,7 +181,7 @@ const TeacherNav = ({ children }) => {
             <div className="flex items-center gap-3">
               <div className="text-right hidden sm:block">
                 <p className="text-xs font-black text-gray-900 leading-none">
-                  Prof. Harrison
+                  {data.name}
                 </p>
                 <p className="text-[10px] font-bold text-indigo-500 uppercase mt-1">
                   Senior Faculty
@@ -159,7 +191,7 @@ const TeacherNav = ({ children }) => {
                 T
               </div>
             </div>
-            <button className="bg-[#FF8A8A] hover:bg-red-500 text-white px-4 py-1.5 rounded-lg text-xs font-black transition-colors uppercase tracking-wider">
+            <button onClick={handleLogout} className="bg-[#FF8A8A] hover:bg-red-500 text-white px-4 py-1.5 rounded-lg text-xs font-black transition-colors uppercase tracking-wider">
               Logout
             </button>
           </div>

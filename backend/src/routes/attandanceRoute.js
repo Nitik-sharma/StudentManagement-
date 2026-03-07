@@ -9,7 +9,7 @@ const router = express.Router()
 
 
 router.post("/mark", protect, authorizeRoles("teacher", "admin"), markAttendance)
-router.get("/date",protect,authorizeRoles("teeacher","admin"),getAttendanceByDate)
+router.get("/date",protect,authorizeRoles("teacher","admin"),getAttendanceByDate)
 
 
 export default router

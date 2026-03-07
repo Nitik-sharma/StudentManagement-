@@ -5,7 +5,7 @@ import { addCourse, addStudent, getAllCourses, getAllStudent, getStudent, update
 const router = express.Router()
 
 
-router.get('/students', protect, authorizeRoles("admin"), getAllStudent)
+router.get('/students', protect, authorizeRoles("admin","teacher"), getAllStudent)
 router.post("/add-student", protect, authorizeRoles("admin"), addStudent)
 router.put("/edit-students/:id", protect, authorizeRoles("admin"), updateDetails)
 router.get("/student/:id", protect, authorizeRoles("admin"), getStudent)

@@ -1,3 +1,4 @@
+import Course from "../models/courseModels"
 import MockTest from "../models/MockTest.js"
 import User from "../models/User.js"
 
@@ -40,4 +41,18 @@ try {
 }
 
 
+}
+
+
+export const getAllMarks = async (req, res) => {
+    try {
+        const marks = await MockTest.find().populate("student", "name course")
+        
+        const formattedMarks = marks.map(m => ({
+            name: m.student.name,
+            c
+        }))
+    } catch (error) {
+        
+    }
 }

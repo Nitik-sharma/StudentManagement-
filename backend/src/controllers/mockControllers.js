@@ -6,7 +6,18 @@ export const addMockTest = async (req, res) => {
 
     const { studentId, testName, score, maxScore } = req.body;
 
-    const percentage = (Number(score) / Number(maxScore)) * 100;
+
+    const percentage = ((score / maxScore) * 100).toFixed(2);
+    const existing = await MockTest.findOne({
+  student: studentId,
+  testName: testName
+});
+
+if (existing) {
+  return res.status(400).json({
+    message: "Marks already added for this test"
+  });
+}
 
     const addMock = await MockTest.create({
       student: studentId,
@@ -37,9 +48,8 @@ export const getMockTest = async (req, res) => {
 
   try {
 
-    const mockTest = await MockTest
-      .find({ student: req.user._id })
-      .sort({ createdAt: -1 });
+    const mockTest = await MockTest.find().populate("student", "name course rollNo").sort({ createdAt: -1 })
+    
 
     res.json({
       success: true,

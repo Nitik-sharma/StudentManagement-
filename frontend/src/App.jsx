@@ -28,6 +28,7 @@ import StudentProfile from './Deshboards/StudentDesh/StudentProfile';
 import AddStudentForm from './Deshboards/Admin/AddStudentForm';
 import EditStudentForm from './Deshboards/Admin/EditStudentForm';
 import AddCourse from './Deshboards/Admin/AddCourse';
+import AdminMockMarks from './Deshboards/Admin/AdminMockMarks';
 
 function App() {
 
@@ -61,7 +62,8 @@ function App() {
           <Route path="/student/profile" element={<StudentProfile />} />
           <Route path="/add-student" element={<AddStudentForm />} />
           <Route path="/edit-student/:id" element={<EditStudentForm />} />
-          <Route path="/add-course" element={ <AddCourse/>} />
+          <Route path="/add-course" element={<AddCourse />} />
+          <Route path="/add-mock/:id" element={<AdminMockMarks/>} />
         </Routes>
       </BrowserRouter>
     </>

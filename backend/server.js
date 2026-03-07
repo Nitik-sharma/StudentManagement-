@@ -30,7 +30,7 @@ app.use("/api/projects", projectRoutes)
 app.use("/api/file", fileRoutes)
 app.use("/api/attendance", attandanceRoute)
 app.use("/api/addAssignment", assignmentRoutes)
-app.use("/api/addMockTest", addMock)
+app.use("/api/MockTest", addMock)
 app.use("/api/performance", Dashboard)
 app.use("/api/admin",adminRoute)
 

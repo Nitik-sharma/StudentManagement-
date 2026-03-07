@@ -20,7 +20,7 @@ import mongoose from 'mongoose'
     },
     percentage: {
         type: Number,
-        required:true
+        
     },
     evaluatedBy: {
         type: mongoose.Schema.Types.ObjectId,

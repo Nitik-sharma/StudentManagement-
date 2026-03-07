@@ -5,6 +5,6 @@ import { addMockTest, getMockTest } from '../controllers/mockControllers.js'
 const router = express.Router()
 
 
-router.post("/add-mock", protect, authorizeRoles("teacher", "admin"), addMockTest)
-router.get("/get-Mock",protect,getMockTest)
+router.post("/add", protect, authorizeRoles("teacher", "admin"), addMockTest)
+router.get("/",protect,getMockTest)
 export default router

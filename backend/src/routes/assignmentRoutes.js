@@ -1,12 +1,10 @@
 import express from 'express'
-import { authorizeRoles, protect } from "../middleware/middleware.js"
-import { addAssignment, getMyAssignments } from '../controllers/assignmentControllers.js'
-
+import { authorizeRoles, protect } from '../middleware/middleware.js'
+import { addAssignment, getAssignments } from '../controllers/assignmentControllers.js'
 
 const router = express.Router()
 
-
-router.post("/", protect, authorizeRoles("teacher", 'admin'), addAssignment)
-router.get("/my-assignments",protect,getMyAssignments)
+router.post("/add", protect, authorizeRoles("teacher", "admin"), addAssignment)
+router.get("/all", protect, authorizeRoles("teacher", "admin"), getAssignments)
 
 export default router

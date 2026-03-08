@@ -1,46 +1,52 @@
 import Assignment from "../models/Assignment.js";
 
-
 export const addAssignment = async (req, res) => {
-    try {
-        const { studentId, course, title, marksObtain, maxMarks } = req.body
-        
-        const percentage = (Number(marksObtain) / Number(maxMarks)) * 100
-        
-        const assignment = await Assignment.create({
-            student: studentId,
-            course,
-            title,
-            marksObtain,
-            maxMarks,
-            percentage: percentage,
-            evaluatedBy:req.user._id
+  try {
 
-        })
+    const { studentId, assignmentName, obtainedMarks, totalMarks } = req.body;
 
-        res.status(201).json({message:"Assignment marks obtain sucessfully",assignment})
-        
-    } catch (error) {
-        res.status(500).json({message:error.message})
-    }
-}
+    const percentage =
+      (Number(obtainedMarks) / Number(totalMarks)) * 100;
+
+    const assignment = await Assignment.create({
+      student: studentId,
+      assignmentName,
+      obtainedMarks,
+      totalMarks,
+      percentage,
+      evaluatedBy: req.user._id
+    });
+
+    res.json({
+      success: true,
+      message: "Assignment marks added",
+      assignment
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+};
 
 
-export const getMyAssignments = async (req, res) => {
-    try {
-        const assignment = await Assignment.find({ student: req.user._id }).sort({ createAt: -1 })
-       
-        
-        res.json({
-            success: true,
-            count: assignment.length,
-            assignment
-            
-            
-        })
-        
-    } catch (error) {
-        res.status(500).json({message:error.message})
-    }
-}
+export const getAssignments = async (req, res) => {
+  try {
 
+    const assignments = await Assignment.find()
+      .populate("student", "name rollNo")
+      .sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      count: assignments.length,
+      assignments
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+};

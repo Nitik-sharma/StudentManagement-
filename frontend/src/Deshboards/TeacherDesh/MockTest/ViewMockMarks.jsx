@@ -1,32 +1,51 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TeacherNav from "../TeacherNav";
 import { FlaskConical, Target, Award } from "lucide-react";
+import API from "../../../service/api";
 
 const ViewMockTests = () => {
-  const mockHistory = [
-    {
-      name: "Full Length Mock - 01",
-      date: "Feb 18, 2026",
-      avgScore: "76/100",
-      topScorer: "Priya Patel",
-      status: "Completed",
-    },
-    {
-      name: "Aptitude Mock Test",
-      date: "Feb 12, 2026",
-      avgScore: "82/100",
-      topScorer: "Rahul Sharma",
-      status: "Completed",
-    },
-    {
-      name: "Technical Mock - IT",
-      date: "Feb 08, 2026",
-      avgScore: "68/100",
-      topScorer: "Sneha Gupta",
-      status: "Completed",
-    },
-  ];
+  const token=localStorage.getItem("token")
+  const [mockHistory,setMockHistory] =useState([])
 
+  useEffect(() => {
+    const fetchData =async () => {
+       try {
+        const res = await API.get("/MockTest/", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+         
+        
+        const mock = res.data.mockTest;
+         setMockHistory(mock)
+       } catch (error) {
+         console.log(error.message)
+       }
+    }
+    
+    fetchData()
+  }, [])
+  
+  console.log(mockHistory)
+  const highestMarks =
+    mockHistory.length > 0
+      ? Math.max(
+          ...mockHistory
+            .filter((m) => m.score !== "-")
+            .map((m) => Number(m.score)),
+        )
+      : 0;
+  
+ const averageScore =
+   mockHistory.length > 0
+     ? (
+         mockHistory.reduce((sum, m) => sum + Number(m.score), 0) /
+         mockHistory.length
+       ).toFixed(1)
+     : 0;
+
+  
   return (
     <TeacherNav>
       <div className="max-w-7xl mx-auto space-y-8">
@@ -44,19 +63,19 @@ const ViewMockTests = () => {
           <MockStat
             icon={<FlaskConical />}
             label="Total Mock Tests"
-            value="08"
+            value={mockHistory.length}
             color="bg-purple-600"
           />
           <MockStat
             icon={<Target />}
             label="Avg. Class Score"
-            value="75.4%"
+            value={averageScore}
             color="bg-indigo-600"
           />
           <MockStat
             icon={<Award />}
             label="Highest Score"
-            value="98/100"
+            value={highestMarks}
             color="bg-amber-500"
           />
         </div>
@@ -70,10 +89,10 @@ const ViewMockTests = () => {
                   Test Name & Date
                 </th>
                 <th className="p-5 text-[11px] font-black uppercase text-gray-500 tracking-widest text-center">
-                  Avg. Score
+                  Score
                 </th>
                 <th className="p-5 text-[11px] font-black uppercase text-gray-500 tracking-widest">
-                  Top Performer
+                  StudentName
                 </th>
                 <th className="p-5 text-[11px] font-black uppercase text-gray-500 tracking-widest text-right">
                   Status
@@ -85,15 +104,15 @@ const ViewMockTests = () => {
                 <tr key={i} className="hover:bg-gray-50/50 transition-colors">
                   <td className="p-5">
                     <p className="font-black text-gray-800 text-sm leading-tight">
-                      {mock.name}
+                      {mock.testName}
                     </p>
                     <p className="text-[10px] text-gray-400 font-bold uppercase mt-1">
-                      {mock.date}
+                      {mock.createdAt.split("T")[0]}
                     </p>
                   </td>
                   <td className="p-5 text-center">
                     <span className="bg-indigo-50 text-indigo-600 px-4 py-1 rounded-full font-black text-xs">
-                      {mock.avgScore}
+                      {mock.score}
                     </span>
                   </td>
                   <td className="p-5">
@@ -102,13 +121,16 @@ const ViewMockTests = () => {
                         ★
                       </div>
                       <span className="text-sm font-bold text-gray-700">
-                        {mock.topScorer}
+                        {mock.student.name}
                       </span>
                     </div>
                   </td>
                   <td className="p-5 text-right">
-                    <span className="text-[10px] font-black text-green-500 uppercase bg-green-50 px-3 py-1 rounded-md">
-                      {mock.status}
+                    <span
+                      className={`text-[10px] font-black uppercase px-3 py-1 rounded-md 
+    ${mock.percentage >= 50 ? "text-green-500 bg-green-50" : "text-red-500 bg-red-50"}`}
+                    >
+                      {mock.percentage >= 50 ? "Pass" : "Fail"}
                     </span>
                   </td>
                 </tr>

@@ -10,6 +10,8 @@ const AddAssignments = () => {
   });
   const [percentage, setPercentage] = useState(0);
 
+  
+
   // Logic: System calculates percentage automatically
   useEffect(() => {
     if (

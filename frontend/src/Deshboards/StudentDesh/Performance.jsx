@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 const Performance = () => {
+  const token=localStorage.getItem("token")
   return (
     <StudentNav>
       <div className="max-w-7xl mx-auto space-y-8 font-sans">

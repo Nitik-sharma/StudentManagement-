@@ -1,31 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FileText, Users, TrendingUp } from "lucide-react";
 import TeacherNav from '../TeacherNav'
+import API from "../../../service/api";
 
 const ViewAssignments = () => {
-  const assignments = [
-    {
-      name: "Data Structures - Mid-term",
-      submissions: 118,
-      avg: "82.4%",
-      date: "Feb 15, 2026",
-      status: "Graded",
-    },
-    {
-      name: "Database Systems - Quiz 1",
-      submissions: 120,
-      avg: "78.2%",
-      date: "Feb 10, 2026",
-      status: "Graded",
-    },
-    {
-      name: "Algorithms - Final Project",
-      submissions: 115,
-      avg: "88.9%",
-      date: "Feb 05, 2026",
-      status: "Graded",
-    },
-  ];
+  const [assignments,setAssignments ]= useState([]);
+
+  const token = localStorage.getItem("token")
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await API.get("/addAssignment/all", {
+          headers: {
+            Authorization:`Bearer ${token}`
+          }
+        });
+
+      
+        const resAssignment = res.data.assignments;
+        setAssignments(resAssignment)
+      } catch (error) {
+        console.log(error.message)
+      }
+    }
+
+    fetchData()
+  }, [])
+  
+  console.log(assignments)
 
   return (
     <TeacherNav>
@@ -48,26 +51,10 @@ const ViewAssignments = () => {
             <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest">
               Total Created
             </p>
-            <p className="text-2xl font-black text-gray-800">12</p>
+            <p className="text-2xl font-black text-gray-800">{assignments.length }</p>
           </div>
-          <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
-            <div className="w-12 h-12 bg-indigo-600 rounded-2xl flex items-center justify-center text-white mb-4">
-              <Users />
-            </div>
-            <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest">
-              Pending Grading
-            </p>
-            <p className="text-2xl font-black text-gray-800">02</p>
-          </div>
-          <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
-            <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center text-white mb-4">
-              <TrendingUp />
-            </div>
-            <p className="text-gray-400 text-[10px] font-black uppercase tracking-widest">
-              Class Average
-            </p>
-            <p className="text-2xl font-black text-gray-800">83.1%</p>
-          </div>
+        
+         
         </div>
 
         {/* Assignment Table */}
@@ -78,17 +65,17 @@ const ViewAssignments = () => {
                 <th className="p-5 text-[11px] font-black uppercase text-gray-500 tracking-widest">
                   Assignment Title
                 </th>
-                <th className="p-5 text-[11px] font-black uppercase text-gray-500 tracking-widest text-center">
+                {/* <th className="p-5 text-[11px] font-black uppercase text-gray-500 tracking-widest text-center">
                   Submissions
-                </th>
+                </th> */}
                 <th className="p-5 text-[11px] font-black uppercase text-gray-500 tracking-widest text-center">
-                  Avg Score
+                  Score
                 </th>
                 <th className="p-5 text-[11px] font-black uppercase text-gray-500 tracking-widest">
                   Created Date
                 </th>
                 <th className="p-5 text-[11px] font-black uppercase text-gray-500 tracking-widest text-right">
-                  Action
+                  Total Marks
                 </th>
               </tr>
             </thead>
@@ -101,25 +88,23 @@ const ViewAssignments = () => {
                         A{i + 1}
                       </div>
                       <span className="font-bold text-gray-800">
-                        {asm.name}
+                        {asm.assignmentName}
                       </span>
                     </div>
                   </td>
-                  <td className="p-5 text-center font-bold text-gray-600">
+                  {/* <td className="p-5 text-center font-bold text-gray-600">
                     {asm.submissions}
-                  </td>
+                  </td> */}
                   <td className="p-5 text-center">
                     <span className="bg-green-50 text-green-600 px-3 py-1 rounded-full font-black text-xs">
-                      {asm.avg}
+                      {asm.obtainedMarks}
                     </span>
                   </td>
                   <td className="p-5 font-bold text-gray-500 text-sm">
-                    {asm.date}
+                    {asm.createdAt.split("T")[0]}
                   </td>
-                  <td className="p-5 text-right">
-                    <button className="text-indigo-600 font-black text-xs uppercase hover:underline">
-                      Edit Details
-                    </button>
+                  <td className="p-5 font-bold text-gray-500 text-sm">
+                    {asm.totalMarks}
                   </td>
                 </tr>
               ))}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TeacherNav from "./TeacherNav";
 import {
   User,
@@ -9,17 +9,41 @@ import {
   Award,
   Calendar,
 } from "lucide-react";
+import { useParams } from "react-router-dom";
+import API from "../../service/api";
 
 const StudentPerformance = () => {
   // Mock data for a specific student's performance
-  const studentProfile = {
-    name: "Rahul Sharma",
-    roll: "CS001",
-    course: "Computer Science",
-    email: "rahul.sharma@email.com",
-    cgpa: "8.4",
-    overallStatus: "Excellent",
-  };
+  const { id } = useParams()
+  const token=localStorage.getItem("token")
+  console.log(id)
+  const [studentProfile,setStudentProfile] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await API.get(`/performance/${id}`, {
+          headers: {
+            Authorization:`Bearer ${token}`
+          }
+        });
+
+        console.log(res.data.performance);
+        const student=res.data.performance
+        setStudentProfile(student)
+
+      } catch (error) {
+        console.log(error.message)
+      }
+    }
+
+    fetchData()
+    
+  }, [])
+  
+  console.log(studentProfile);
+
+ 
 
   return (
     <TeacherNav>
@@ -28,17 +52,17 @@ const StudentPerformance = () => {
         <div className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-6">
             <div className="w-24 h-24 rounded-full bg-indigo-600 text-white flex items-center justify-center font-black text-4xl shadow-xl shadow-indigo-100">
-              R
+              {studentProfile?.student?.name[0].toUpperCase()}
             </div>
             <div>
               <h1 className="text-3xl font-black text-gray-900 leading-tight">
-                {studentProfile.name}
+                {studentProfile?.student?.name}
               </h1>
               <p className="text-indigo-500 font-bold uppercase tracking-wider text-sm">
-                {studentProfile.course} | {studentProfile.roll}
+                {studentProfile?.student?.course} | {studentProfile.roll}
               </p>
               <p className="text-gray-400 font-medium text-sm mt-1">
-                {studentProfile.email}
+                {studentProfile?.student?.email}
               </p>
             </div>
           </div>
@@ -57,21 +81,21 @@ const StudentPerformance = () => {
           <PerformanceCard
             icon={<Calendar />}
             label="Attendance %"
-            value="92%"
+            value={studentProfile.attendancePercentage}
             color="bg-blue-600"
             sub="24/26 Days"
           />
           <PerformanceCard
             icon={<FileText />}
             label="Assignment Avg"
-            value="85.4%"
+            value={studentProfile.assignmentAverage}
             color="bg-orange-500"
             sub="12 Submissions"
           />
           <PerformanceCard
             icon={<FlaskConical />}
             label="Mock Test Avg"
-            value="78.0%"
+            value={studentProfile.mockAverage}
             color="bg-purple-600"
             sub="08 Tests"
           />
@@ -94,23 +118,13 @@ const StudentPerformance = () => {
             <div className="space-y-4 font-sans">
               <ProgressBar
                 label="Attendance"
-                percentage={92}
+                percentage={studentProfile.attendancePercentage}
                 color="bg-blue-500"
               />
               <ProgressBar
                 label="Technical Skills"
-                percentage={88}
+                percentage={studentProfile.mockAverage}
                 color="bg-indigo-500"
-              />
-              <ProgressBar
-                label="Soft Skills"
-                percentage={75}
-                color="bg-purple-500"
-              />
-              <ProgressBar
-                label="Lab Work"
-                percentage={95}
-                color="bg-emerald-500"
               />
             </div>
           </div>
@@ -125,10 +139,10 @@ const StudentPerformance = () => {
               <ResultRow title="End-term Mock" score="92/100" date="Feb 15" />
               <ResultRow
                 title="Data Structures Assignment"
-                score="85/100"
+                score={studentProfile.mockAverage}
                 date="Feb 10"
               />
-              <ResultRow title="Weekly Quiz" score="10/10" date="Feb 02" />
+            
             </div>
           </div>
         </div>

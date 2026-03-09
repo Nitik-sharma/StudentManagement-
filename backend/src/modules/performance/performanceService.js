@@ -52,6 +52,12 @@ export const getPerformance = async (studentId) => {
 
     // RETURN performance object
     return {
+      student: {
+        name: student.name,
+        email: student.email,
+        rollNo: student.rollNo,
+        course:student.course
+      },
       attendancePercentage: attendanceAverage,
       assignmentAverage: assignmentAverage,
       mockAverage: mockAverage,

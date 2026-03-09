@@ -10,6 +10,7 @@ import assignmentRoutes from './src/routes/assignmentRoutes.js'
 import addMock from './src/routes/mockTestRoutes.js'
 import Dashboard from './src/routes/performanceRoutes.js'
 import adminRoute from './src/routes/adminRoutes.js'
+import performanceRoutes from "./src/routes/performanceRoutes.js"
 
 dotenv.config()
 
@@ -32,7 +33,8 @@ app.use("/api/attendance", attandanceRoute)
 app.use("/api/addAssignment", assignmentRoutes)
 app.use("/api/MockTest", addMock)
 app.use("/api/performance", Dashboard)
-app.use("/api/admin",adminRoute)
+app.use("/api/admin", adminRoute)
+app.use("/api/performance", performanceRoutes)
 
 app.get("/", (req, res) => {
     res.send("Project is running ")

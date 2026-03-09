@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Users,
@@ -78,8 +78,7 @@ const menuItems = [
 ];
 
 const TeacherNav = ({ children }) => {
-
-  console.log("hello")
+const navigate=useNavigate()
   const [data, setData] = useState([])
     const token=localStorage.getItem("token")
     useEffect(() => {

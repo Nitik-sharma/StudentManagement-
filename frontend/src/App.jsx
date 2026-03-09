@@ -52,7 +52,7 @@ function App() {
           <Route path="/assignments/view" element={<ViewAssignments />} />
           <Route path="/attendance/mark" element={<MarkAttendance />} />
           <Route path="/attendance/view" element={<ViewAttendance />} />
-          <Route path="/performance" element={<StudentPerformance />} />
+          <Route path="/performance/:id" element={<StudentPerformance />} />
           <Route path="/mocktests/add" element={<AddMockMarks />} />
           <Route path="/mocktests/view" element={<ViewMockMarks />} />
           <Route path="/prediction" element={<PlacemtPridiction />} />
@@ -63,7 +63,7 @@ function App() {
           <Route path="/add-student" element={<AddStudentForm />} />
           <Route path="/edit-student/:id" element={<EditStudentForm />} />
           <Route path="/add-course" element={<AddCourse />} />
-          <Route path="/add-mock/:id" element={<AdminMockMarks/>} />
+          <Route path="/add-mock/:id" element={<AdminMockMarks />} />
         </Routes>
       </BrowserRouter>
     </>

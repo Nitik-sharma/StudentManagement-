@@ -1,61 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TeacherNav from "./TeacherNav";
 import { Search, Filter, MoreVertical, ExternalLink } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import API from "../../service/api";
 
 const TeacherStudents = () => {
   const [viewType, setViewType] = useState("cards");
   const [searchQuery, setSearchQuery] = useState("");
-
+const token=localStorage.getItem("token")
   // Mock data based on your "Manage Students" requirements
-  const studentsData = [
-    {
-      id: 1,
-      name: "Rahul Sharma",
-      roll: "CS001",
-      email: "rahul.sharma@email.com",
-      course: "Computer Science",
-      status: "Active",
-      initial: "R",
-      performance: "85%",
-    },
-    {
-      id: 2,
-      name: "Priya Patel",
-      roll: "IT002",
-      email: "priya.patel@email.com",
-      course: "Information Technology",
-      status: "Active",
-      initial: "P",
-      performance: "92%",
-    },
-    {
-      id: 3,
-      name: "Sneha Gupta",
-      roll: "ME004",
-      email: "sneha.gupta@email.com",
-      course: "Mechanical Engineering",
-      status: "Inactive",
-      initial: "S",
-      performance: "65%",
-    },
-    {
-      id: 4,
-      name: "Arjun Singh",
-      roll: "EC003",
-      email: "arjun.singh@email.com",
-      course: "Electronics",
-      status: "Active",
-      initial: "A",
-      performance: "78%",
-    },
-  ];
+  const [studentsData,setStudentsData] = useState([]);
 
   const filteredStudents = studentsData.filter(
     (s) =>
       s.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       s.roll.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+    try {
+      const res = await API.get("admin/students", {
+        headers: {
+          Authorization:`Bearer ${token}`
+        }
+      });
+
+      // console.log(res.data.students);
+      const students = res.data.students;
+      setStudentsData(students)
+    } catch (error) {
+      console.log(error.message)
+    }
+    }
+
+    fetchData()
+  },[])
 
   return (
     <TeacherNav>
@@ -113,7 +94,8 @@ const TeacherStudents = () => {
         {viewType === "cards" ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {filteredStudents.map((student) => (
-              <StudentCard key={student.id} student={student} />
+              
+              <StudentCard key={student._id} student={student} />
             ))}
           </div>
         ) : (
@@ -130,7 +112,7 @@ const StudentCard = ({ student }) => (
   <div className="bg-white p-6 rounded-[2rem] shadow-sm border-2 border-transparent hover:border-indigo-400 transition-all group">
     <div className="flex gap-5">
       <div className="w-14 h-14 rounded-full bg-indigo-600 text-white flex items-center justify-center font-black text-xl shadow-lg shadow-indigo-100 flex-shrink-0">
-        {student.initial}
+        {student.name[0].toUpperCase()}
       </div>
 
       <div className="flex-1">
@@ -157,7 +139,7 @@ const StudentCard = ({ student }) => (
 
         <div className="flex gap-3 mt-5">
           <button className="flex-1 bg-indigo-600 text-white py-2.5 rounded-xl text-xs font-black shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all flex items-center justify-center gap-2">
-            <NavLink to={"/performance"}> Performance</NavLink>{" "}
+            <NavLink to={`/performance/${student._id}`}> Performance</NavLink>{" "}
             <ExternalLink size={14} />
           </button>
           <button className="px-3 bg-gray-100 text-gray-600 py-2.5 rounded-xl hover:bg-gray-200 transition-all">

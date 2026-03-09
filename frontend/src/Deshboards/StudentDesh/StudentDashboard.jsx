@@ -5,9 +5,9 @@ import API from "../../service/api";
 import axios from "axios";
 
 const StudentDashboard = () => {
-  const [profile, setProfile] = useState({})
+  const [profile, setProfile] = useState([])
   const [attandance,setAttandance]=useState({})
-  const [performance, setPerformance] = useState({})
+  const [performance, setPerformance] = useState([])
   const [assignments, setAssignments] = useState([])
   
   useEffect(() => {
@@ -28,36 +28,17 @@ const StudentDashboard = () => {
         const profileData = profileRes.data
         setProfile(profileData)
 
-        // get user attandance
-
-        const getAttandance = await API.get("/attandance/getAttandance", {
+        const performanceData = await API.get(`/performance/${profileData._id}`, {
           headers: {
             Authorization:`Bearer ${token}`
           }
         });
 
-        
+        console.log(performanceData.data.performance);
 
-      
-        setAttandance(getAttandance.data.attandance[0]);
+        const resPerformData = performanceData.data.performance;
 
-        // fetch performance data
-
-        const getPerformance = await API.get(
-          `/performance/${profileData._id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-
-        const performanceData = getPerformance.data
-        
-        setPerformance(performanceData)
-
-        console.log(getPerformance)
-        
+        setPerformance(resPerformData)
        
       } catch (error) {
         
@@ -69,7 +50,8 @@ const StudentDashboard = () => {
   
 
 
-console.log(performance)
+  console.log(profile)
+  
 
 
   return (
@@ -88,41 +70,26 @@ console.log(performance)
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <SummaryCard
             label="Attendance"
-            value={attandance.attendancePercentage}
+            value={performance?.attendancePercentage?.toFixed(2)}
             sub="Above Average"
             icon={<Clock />}
             color="text-blue-600 bg-blue-50"
           />
           <SummaryCard
-            label="Attended Class"
-            value={attandance.attendedClasses}
+            label="Mock Score "
+            value={performance?.mockAverage?.toFixed(2)}
             sub="Above Average"
             icon={<Clock />}
             color="text-blue-600 bg-blue-50"
           />
           <SummaryCard
-            label="Total class "
-            value={attandance.totalClass}
+            label="Assignment Average "
+            value={performance?.assignmentAverage?.toFixed(2)}
             sub="Above Average"
             icon={<Clock />}
             color="text-blue-600 bg-blue-50"
           />
-          <SummaryCard
-            label="Current CGPA"
-            value={performance.cgpa>0?performance.
-cgpa:"0"
-}
-            sub="+0.2 from last sem"
-            icon={<Award />}
-            color="text-indigo-600 bg-indigo-50"
-          />
-          <SummaryCard
-            label="Pending Tasks"
-            value="03"
-            sub="Assignments due"
-            icon={<CheckCircle />}
-            color="text-orange-500 bg-orange-50"
-          />
+
           <SummaryCard
             label="Placement Chance"
             value="92%"

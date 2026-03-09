@@ -1,6 +1,7 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
+import React,{useState,useEffect} from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import { LayoutDashboard, LineChart, UserCircle, LogOut } from "lucide-react";
+import API from "../../service/api";
 
 const studentMenuItems = [
     {
@@ -22,6 +23,39 @@ const studentMenuItems = [
 ];
 
 const StudentNav = ({ children }) => {
+  const [profile, setProfile] = useState([])
+
+  const navigate=useNavigate()
+  
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      console.log(token);
+
+      // access user profile
+      const profileRes = await API.get("/auth/profile", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const profileData = profileRes.data;
+      setProfile(profileData);
+    } catch (error) {}
+  };
+
+  fetchData();
+}, []);
+  
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
+  console.log("profile",profile)
+
+
+
   return (
     <div className="flex min-h-screen bg-white font-sans antialiased">
       <aside className="w-64 border-r border-gray-100 flex flex-col sticky top-0 h-screen bg-white">
@@ -43,8 +77,8 @@ const StudentNav = ({ children }) => {
           ))}
         </nav>
         <div className="p-4 border-t border-gray-50">
-          <button className="w-full flex items-center gap-3 px-4 py-3 text-red-400 font-bold hover:bg-red-50 rounded-xl transition-all">
-            <LogOut size={18} /> <span>Logout</span>
+          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 text-red-400 font-bold hover:bg-red-50 rounded-xl transition-all">
+            <LogOut size={18}  /> <span>Logout</span>
           </button>
         </div>
       </aside>
@@ -57,14 +91,14 @@ const StudentNav = ({ children }) => {
           <div className="flex items-center gap-4">
             <div className="text-right">
               <p className="text-xs font-black text-gray-900 leading-none">
-                Rahul Sharma
+                {profile?.name}
               </p>
               <p className="text-[10px] font-bold text-gray-400 mt-1 uppercase">
-                CS001 • Sem 6
+                {profile.course}
               </p>
             </div>
             <div className="w-9 h-9 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-sm">
-              R
+              {profile?.name?.[0]?.toUpperCase()}
             </div>
           </div>
         </header>
